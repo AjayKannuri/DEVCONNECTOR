@@ -1,8 +1,11 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router();
 var bcrypt = require('bcryptjs');
-const { check, validationResult } = require('express-validator/check')
-const User = require('../../models/user')
+const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
+const { check, validationResult } = require('express-validator/check');
+const config = require('config');
+const User = require('../../models/user');
 
 // @route POST api/users
 // @desc Register user
@@ -32,16 +35,16 @@ router.post(
               if(user){
               return  res.status(400).json({ errors: [{msg: 'User already exists'}] });
               }
-              // Get users gravatar
-              // const avatar = gravatar.url(email,{
-              //   s: '200',
-              //   r: 'pg',
-              //   d: 'mm'
-              // });
+            //  Get users gravatar
+              const avatar = gravatar.url(email,{
+                s: '200',
+                r: 'pg',
+                d: 'mm'
+              });
               user = new User({
                 name,
                 email,
-            //    avatar,
+                avatar,
                 password
               });
               // Encrypt password using bcrypt
@@ -50,14 +53,25 @@ router.post(
               await user.save();
 
               // Return jsonwebtoken
-              res.send('User registered');
+              //res.send('User registered');
+              const payload = {
+                user:{
+                  id:user.id
+                }
+              };
+                jwt.sign(payload, config.get('jwtSecret'),{expiresIn:360000},
+                (err,token)=>{
+                  if(err) throw err;
+                  res.json({token});
+                }
+              );
             } catch(err) {
               console.error(err.message);
               res.status(500).send('Server error');
             }
 
 
-  //  console.log(req.body);
+            //  console.log(req.body);
 
       }
     );
