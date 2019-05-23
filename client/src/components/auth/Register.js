@@ -3,11 +3,11 @@ import axios from 'axios';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {setAlert} from '../../actions/alert';
-import {auth} from '../../actions/auth';
+import {register} from '../../actions/auth';
 import  PropTypes from 'prop-types';
 // import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-const Register = (setAlert,register) => {
+const Register = (props) => {
   const [formData, setFormData] = useState({
     name: "",
     email:"",
@@ -22,12 +22,13 @@ const Register = (setAlert,register) => {
       if(password !== password2)
       {
         //console.log('Passwords do not match');
-        setAlert('Passwords do not match','danger');
+        props.setAlert('Passwords do not match','danger');
+      //  alert('Passwords do not match');
       } else
       {     // adding to the database using axios libraray.........
 
-            console.log("successfully user is created");
-            register({name,email,password});
+            //console.log("successfully user is created");
+            props.register({name,email,password});
             // const newUser = {
             //   name,email,password
             // };
@@ -64,10 +65,10 @@ const Register = (setAlert,register) => {
                 </small>
               </div>
               <div className="form-group">
-                <input type="password" placeholder="Password" name='password' value={password} onChange={ e=> onChange(e)} required minlength="6" />
+                <input type="password" placeholder="Password" name='password' value={password} onChange={ e=> onChange(e)} required />
               </div>
               <div className="form-group">
-                <input type="password" placeholder="Confirm Password" name='password2' value={password2} onChange={ e=> onChange(e)} required minlength="6" />
+                <input type="password" placeholder="Confirm Password" name='password2' value={password2} onChange={ e=> onChange(e)} required />
               </div>
               <input type="submit" value="Register" className="btn btn-primary" />
           </form>
@@ -78,9 +79,9 @@ const Register = (setAlert,register) => {
   );
 
 };
-Register.propTypes = {
-  setAlert : PropTypes.func.isRequired,
-  register: PropTypes.func.isRequired
-};
+// Register.propTypes = {
+//   setAlert : PropTypes.func.isRequired,
+//   register: PropTypes.func.isRequired
+// };
 
-export default connect(null, {setAlert,auth})(Register);
+export default connect(null, {setAlert,register})(Register);

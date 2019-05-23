@@ -22,6 +22,7 @@ export const register = ({ name, email, password }) => async dispatch => {
           type: REGISTER_SUCCESS,
           payload: res.data
         });
+        alert("new User created successfully");
 
       //  dispatch(loadUser());
       } catch (err) {

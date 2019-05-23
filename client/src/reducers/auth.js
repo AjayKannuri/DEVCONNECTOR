@@ -20,7 +20,7 @@ export default function(state = initialState, action) {
         ...state,
         ...payload,
         isAuthenticated:true,
-        loading:false;
+        loading:false
       }
     case REGISTER_FAIL:
           localStorage.removeItem('token');
@@ -33,4 +33,4 @@ export default function(state = initialState, action) {
     default:
       return state;
   }
-}
+};
