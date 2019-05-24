@@ -1,10 +1,10 @@
 import React,{Fragment, useState} from 'react';
-import axios from 'axios';
-import {Link} from 'react-router-dom';
+//import axios from 'axios';
+import {Link,Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {setAlert} from '../../actions/alert';
 import {register} from '../../actions/auth';
-import  PropTypes from 'prop-types';
+//import  PropTypes from 'prop-types';
 // import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 const Register = (props) => {
@@ -45,6 +45,10 @@ const Register = (props) => {
             //   console.error(err.response.data);
             // }
       }
+    };
+    if(props.isAuthenticated)
+    {
+      return <Redirect to="/dashboard" />
     }
 
   return (
@@ -83,5 +87,8 @@ const Register = (props) => {
 //   setAlert : PropTypes.func.isRequired,
 //   register: PropTypes.func.isRequired
 // };
+const mapStateToProps = state => ({
+      isAuthenticated : state.auth.isAuthenticated
+});
 
-export default connect(null, {setAlert,register})(Register);
+export default connect(mapStateToProps , {setAlert,register})(Register);

@@ -9,8 +9,8 @@ var bcrypt = require('bcryptjs');
 
 // @route GET api/auth
 // @desc Test route
-// @access Public
-router.get('/',auth,async (req,res) => {
+// @access PRIVATE
+router.get('/',auth,async (req,res) => {    // only if it has token it will give the user....
   try{
     const user = await User.findById(req.user.id).select('-password');
     res.json(user);
@@ -64,7 +64,7 @@ router.post(
                 jwt.sign(payload, config.get('jwtSecret'),{expiresIn:360000},
                 (err,token)=>{
                   if(err) throw err;
-                  res.json({token});
+                  return res.json({token});
                 }
               );
             } catch(err) {

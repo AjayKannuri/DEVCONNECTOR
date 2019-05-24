@@ -1,21 +1,30 @@
 import React,{Fragment, useState} from 'react';
-import {Link} from 'react-router-dom';
-import axios from 'axios';
+import {Link, Redirect} from 'react-router-dom';
+//import axios from 'axios';
+import {connect} from 'react-redux';
+// import PropTypes from 'prop-types';
+import {login} from '../../actions/auth';
 // import {BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-const Login = () => {
+const Login = (props) => {
   const [formData, setFormData] = useState({
     name: "",
     email:"",
     password:"",
   });
 
-  const {name,email,password} = formData;
+  const {email,password} = formData;
   const onChange = e => setFormData({ ...formData, [e.target.name]:e.target.value });
   const onSubmit = async e => {
       e.preventDefault();
-      console.log("successfully Logged in");
-    }
+      props.login(email,password);
+      //console.log("successfully Logged in");
+    };
+  // Redirects if logged in
+  if(props.isAuthenticated)
+  {
+    return <Redirect to="/dashboard" />
+  }
 
   return (
       <Fragment>
@@ -25,15 +34,12 @@ const Login = () => {
           <p className="lead"><i className="fas fa-user"></i> Sign Into Your Account</p>
           <form className="form" onSubmit={e => onSubmit(e)}>
               <div className="form-group">
-                <input type="text" placeholder="Name" name='name' value={name} onChange={ e=> onChange(e)} required/>
-              </div>
-              <div className="form-group">
                 <input type="email" placeholder="Email Address" name='email' value={email} onChange={ e=> onChange(e)} required/>
               </div>
               <div className="form-group">
-                <input type="password" placeholder="Password" name='password' value={password} onChange={ e=> onChange(e)} required minlength="6" />
+                <input type="password" placeholder="Password" name='password' value={password} onChange={ e=> onChange(e)} />
               </div>
-              <input type="submit" value="Register" className="btn btn-primary" />
+              <input type="submit" value="Login" className="btn btn-primary" />
           </form>
           <p className="my-1">
            Dont have an account? <Link to="/register">Sign Up</Link>
@@ -42,5 +48,8 @@ const Login = () => {
   );
 
 }
+const mapStateToProps = state => ({
+      isAuthenticated : state.auth.isAuthenticated
+});
 
-export default Login;
+export default connect(mapStateToProps, {login})(Login);
