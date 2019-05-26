@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "social network for developers",
   "engines": {
+    "npm": "6.9.0",
     "node": "8.11.3"
   },
   "main": "server.js",
